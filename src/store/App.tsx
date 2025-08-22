@@ -1,6 +1,6 @@
 
 import './App.css'
-import { Counter } from './components/Counter/Counter'
+import { Counter } from '../components/Counter/Counter'
 
 
 
@@ -12,8 +12,6 @@ function App() {
   
       <div className='App'>
         <Counter/>
-    
-
       </div>
         
   )

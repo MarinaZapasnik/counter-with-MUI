@@ -7,5 +7,6 @@ export const PaperContainer = styled(Paper)({
     flexDirection: 'column',
     padding: '20px',
     backgroundColor: '#adc8e6',
-    borderRadius: '20px'
+    borderRadius: '20px',
+    height: '500px'
 })
