@@ -2,11 +2,13 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SettingsIcon from '@mui/icons-material/SettingsSuggest';
 import { Button, ButtonGroup, CssBaseline, TextField, Typography } from "@mui/material";
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useReducer} from "react";
 import { getCountFromLocalStorage, getValuesFromLocalStorage, setCountToLocalStorage, setValuesToLocalStorage } from "../../utils/localStorageService";
 import { CounterBox } from "../CounterBox/CounterBox";
 import { PaperContainer } from "../PaperContainer/PaperContainer";
 import { PaperContentContainer } from "../PaperContentContainer/PaperContentContainer";
+import { valuesReducer } from '../../model/values-reducer';
+import { countReducer, GetValuesAC, IncrementAC, ResetAС, SetCountAC, SetSettingsAC } from '../../model/count-reducer';
 
 const  MIN_LIMIT_VALUE:number = 0 
 const  MAX_LIMIT_VALUE:number = 500 
@@ -22,8 +24,8 @@ type MessageProps = "enter values and press 'set'" | "incorrect value!" | null
 
 
 export const Counter = () => {
-    const [values, setValues] = useState<ValuesProps>(() => getValuesFromLocalStorage())
-    const [count, setCount] = useState<number | null>(getCountFromLocalStorage());
+    const [values, dispatchValues] = useReducer(valuesReducer, getValuesFromLocalStorage())
+    const [count, dispatchCount] = useReducer(countReducer ,getCountFromLocalStorage());
 
     
     const isIncorrectValues = useMemo(() => {
@@ -61,17 +63,17 @@ export const Counter = () => {
     }, [count, values.stepValue, values.maxValue])
 
     const getValuesHandler = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, value: 'minValue' | 'maxValue' | 'stepValue') => {
-        setCount(null)
+        dispatchCount(GetValuesAC(event, value))
         setCountToLocalStorage(null)
         const newValue = Number(event.target.value)
         const newValues = {...values, [value]: newValue}
-        setValues(newValues)
+        dispatchValues(GetValuesAC(event, value))
         setValuesToLocalStorage(newValues.minValue, newValues.maxValue, newValues.stepValue)
     }    
 
     const setCountHandler = () => {
         if (!isIncorrectValues) {
-            setCount(values.minValue)
+            dispatchCount(SetCountAC(values.minValue))
             setCountToLocalStorage(values.minValue)
         } 
     }
@@ -79,18 +81,18 @@ export const Counter = () => {
     const incrementHahdler = () => {
         if (typeof(count) === 'number') {
             const newCount = count + values.stepValue
-            setCount(newCount) 
+            dispatchCount(IncrementAC(newCount)) 
             setCountToLocalStorage(newCount)
         }
     }
 
     const resetHandler = () => {
-        setCount(values.minValue)
+        dispatchCount(ResetAС (values.minValue))
         setCountToLocalStorage(values.minValue)
     }
 
     const setSettingsHandler = () => {
-        setCount(null)       
+        dispatchCount(SetSettingsAC())       
     }
 
     return (
