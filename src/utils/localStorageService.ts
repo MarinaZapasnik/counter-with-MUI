@@ -28,7 +28,7 @@ export const getCountFromLocalStorage = () => {
         let countFromLS = localStorage.getItem('countKey')
         return countFromLS ? JSON.parse(countFromLS) : 0
     } catch {
-        return 0
+        return null 
     }
     
     

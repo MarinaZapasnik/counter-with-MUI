@@ -8,5 +8,6 @@ export const PaperContainer = styled(Paper)({
     padding: '20px',
     backgroundColor: '#adc8e6',
     borderRadius: '20px',
-    height: '500px'
+    height: '500px',
+    minWidth: '300px'
 })
